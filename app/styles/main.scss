@@ -1,0 +1,195 @@
+
+
+$background: -200px 0px/400px url(/images/tiles.jpg);
+$shadow: rgba(0, 0, 0, 0.25);
+
+%pseudo-block {
+  position: absolute;
+  width: 100px;
+  height: 200px;
+  box-sizing: border-box;
+  background: 0px 0px/400px url(/images/tiles.jpg);
+  background-blend-mode: multiply;
+  backface-visibility: hidden;
+  image-rendering: pixelated;
+  z-index: 10;
+  content: '';
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: #000;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+// Hide the building div because it's for reference only and doesn't need to be rendered
+building {
+  visibility: hidden;
+}
+
+.bottom {
+  @extend %pseudo-block;
+  background-color: white;
+  background-position: -200px 0px;
+  width: 100px;
+  height: 100px;
+
+  &.r {
+    background-position: -100px 0px;
+  }
+
+  &.g {
+    background-position: -299px 0px;
+  }
+
+  &.w {
+    background-position: -100px -100px;
+    animation-name: ANIMATE-WATER;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  &.shade {
+    &.full {
+      background-color: $shadow;
+    }
+
+    &.sw {
+      background: linear-gradient(45deg, $shadow 50%, white 50%), $background;
+    }
+    &.ne {
+      background: linear-gradient(45deg, white 50%, $shadow 50%), $background;
+    }
+  }
+}
+
+.top {
+  @extend %pseudo-block;
+  background-color: white;
+  background-position: 0px -200px;
+  width: 100px;
+  height: 100px;
+}
+
+.back {
+  @extend %pseudo-block;
+  background-color: white;
+}
+
+.front {
+  @extend %pseudo-block;
+  background-color: darkgrey;
+}
+
+.left {
+  @extend %pseudo-block;
+  background-color: lightgrey;
+}
+
+.right {
+  @extend %pseudo-block;
+  background-color: grey;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  padding: 10px;
+  color: white;
+  z-index: 99999999999;
+  & a {
+    color: lightgrey;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+pedestrian {
+  @extend %pseudo-block;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0, rgba(0,0,0,0) 75%), 0px/32px url(/images/ped.gif);
+  width: 32px;
+  height: 32px;
+  z-index: 10;
+
+  &.dead {
+    background: red;
+  }
+}
+
+car {
+  @extend %pseudo-block;
+  background: url(/images/car.png);
+  background-size: 100%;
+  width: 70px;
+  height: 37px;
+  z-index: 10;
+}
+
+wheel {
+  @extend %pseudo-block;
+  background: black;
+  width: 5px;
+  height: 10px;
+  box-shadow: rgba(0,0,0,0.5) 0 0 5px;
+}
+collisionpoint {
+  @extend %pseudo-block;
+  background: green;
+  width: 5px;
+  height: 5px;
+}
+
+canvas {
+  backface-visibility: hidden;
+  z-index: 0;
+}
+
+.ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  & .score {
+    & h1 {
+      font-size: 4em;
+      margin: 20px;
+      padding: 0;
+
+      color: #f5f5f5;
+      text-shadow: 1px 1px 1px #919191,
+          1px 2px 1px #919191,
+          1px 3px 1px #919191,
+          1px 4px 1px #919191,
+          1px 5px 1px #919191,
+          1px 6px 1px #919191,
+      1px 18px 6px rgba(16,16,16,0.4),
+      1px 22px 10px rgba(16,16,16,0.2),
+      1px 25px 35px rgba(16,16,16,0.2),
+      1px 30px 60px rgba(16,16,16,0.4);
+    }
+  }
+}
+
+@keyframes ANIMATE-WATER {
+  from {
+    background-position-x: -100px;
+  }
+  to { 
+    background-position-x: -200px;
+  }
+}
