@@ -1,6 +1,9 @@
 # GTA CSS
 ## A technical demo of how CSS 3D works
 
+![f1cb0dbb4a14701b661d4e13e35a9c13](https://user-images.githubusercontent.com/1726083/112042026-f6378900-8b3e-11eb-84a4-e4a92f86678e.jpg)
+
+
 I made this demo just to see how powerful CSS 3D actually is, and I got a bit carried away...
 
 I was also curious to see how good CSS is for making computer games (spoiler alert: it's not).
