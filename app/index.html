@@ -1,21 +1,40 @@
 <!doctype html>
 <html>
 
-<head>
-  <title>GTA CSS</title>
-</head>
+  <head>
+    <title>GTA CSS</title>
 
-<body>
-  <div id="container"></div>
-  <div class="ui">
-    <div class="score">
-      <h1 id="currentScore">$0</h1>
+    <meta property="og:title" content="GTA CSS">
+    <meta property="og:description" content="A Grand Theft Auto style demo using HTML and CSS 3D">
+    <meta property="og:image" content="https://user-images.githubusercontent.com/1726083/112042026-f6378900-8b3e-11eb-84a4-e4a92f86678e.jpg">
+    <meta property="og:url" content="https://gta-css.herokuapp.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:site_name" content="GTA CSS">
+    <meta name="twitter:image:alt" content="A Grand Theft Auto style demo using HTML and CSS 3D">
+
+    <meta name="twitter:site" content="@beclamide">
+
+    <script src="src/lib/three.min.js"></script>
+    <script src="src/lib/css3d.js"></script>
+    <script src="src/lib/astar.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+  </head>
+
+  <body>
+    <div id="container"></div>
+    <div class="ui">
+      <div class="score">
+        <h1 id="currentScore">$0</h1>
+      </div>
+
+      <span class="github-button">
+        <a class="github-button" href="https://github.com/sponsors/beclamide" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @beclamide on GitHub">Sponsor</a>
+        <a class="github-button" href="https://github.com/beclamide/gta-css" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star beclamide/gta-css on GitHub">Star</a>
+      </span>
     </div>
-  </div>
-  <script src="src/lib/three.min.js"></script>
-  <script src="src/lib/css3d.min.js"></script>
-  <script src="src/lib/astar.js"></script>
-  <script src="src/bundle.js"></script>
-</body>
+    
+    <script src="src/bundle.js"></script>
+  </body>
 
 </html>
