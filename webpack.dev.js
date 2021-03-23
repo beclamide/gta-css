@@ -1,8 +1,12 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-    entry: ['./app/js/src/index.js'],
-    mode: 'production',
+    mode: 'development',
+    devtool: 'inline-source-map',
+	entry: ['./app/js/src/index.js'],
+    devServer: {
+        contentBase: './dist',
+    },
 	output: {
 		filename: 'src/bundle.js',
     },
@@ -26,6 +30,6 @@ module.exports = {
         }]
     },
     performance: {
-        hints: false
-    }
+        hints: 'warning'
+    },
 };
