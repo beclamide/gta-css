@@ -13,12 +13,13 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: 'app/images', to: 'images' },
             { from: 'app/js/lib', to: 'src/lib' },
-            { from: 'app/index.html', to: 'index.html' }
+            { from: 'app/index.html', to: 'index.html' },
+            { from: 'app/manifest.json', to: 'manifest.json' },
         ]),
     ],
     module: {
         rules: [{
-            test: /\.s?css$/,
+            test: /\.scss$/,
             use: [{
                 loader: "style-loader"
             }, {
