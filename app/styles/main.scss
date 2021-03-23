@@ -163,6 +163,8 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
 
   & .score {
     & h1 {
@@ -182,6 +184,13 @@ canvas {
       1px 25px 35px rgba(16,16,16,0.2),
       1px 30px 60px rgba(16,16,16,0.4);
     }
+  }
+
+  & .github-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 20px;
   }
 }
 
