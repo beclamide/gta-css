@@ -5,6 +5,9 @@
   "private": true,
   "author": "John Bower",
   "license": "MIT",
+  "engines": {
+    "node": "~10.13"
+  },
   "dependencies": {
     "http-server": "^0.12.3"
   },
