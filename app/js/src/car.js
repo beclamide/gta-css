@@ -146,6 +146,17 @@ class Car {
     }
   }
 
+  touchWithinBounds(elementId, touch) {
+    if (!touch) return;
+
+    const bounds = document.getElementById(elementId).getBoundingClientRect();
+
+    return {
+      x: Math.max(-1, Math.min(1, (touch.pageX - (bounds.x + bounds.width / 2)) / (bounds.width / 2))),
+      y: Math.max(-1, Math.min(1, (touch.pageY - (bounds.y + bounds.height / 2)) / (bounds.height / 2))),
+    }
+  }
+
   tick() {
     let prev = {
       x: this.object.position.x,
@@ -153,23 +164,53 @@ class Car {
       rot: this.object.rotation.z
     }
 
-    // steering
-    if (this.engine.keysdown.indexOf('ArrowRight') != -1) {
-      this.steering -= (this.steering > -this.maxsteering) ? this.steeringdelta : 0;
-    } else if (this.engine.keysdown.indexOf('ArrowLeft') != -1) {
-      this.steering += (this.steering < this.maxsteering) ? this.steeringdelta : 0;
-    } else {
-      this.steering *= this.straightendelta;
-    }
+    if (this.engine.isMobile) {
 
-    // gas
-    if (this.engine.keysdown.indexOf('ArrowUp') != -1) {
-      this.speed += (this.speed < this.maxspeed) ? this.acceleration: 0;
-    } else if (this.engine.keysdown.indexOf('ArrowDown') != -1) { // reverse
-      this.speed -= (this.speed > -this.maxspeed / 2) ? this.acceleration : 0;
+      const touchSteering = this.touchWithinBounds('steeringController', this.engine.touchSteering);
+      const touchGas = this.touchWithinBounds('gasController', this.engine.touchGas);
+
+      // steering
+      if (touchSteering) {
+        this.steering = this.maxsteering * -touchSteering.x;
+      } else {
+        this.steering *= this.straightendelta;
+      }
+      
+      document.getElementById('steeringController').style.transform = `rotate(${-this.steering * 5000}deg)`;
+
+      // gas
+      if (touchGas) {
+        if (touchGas.y < 0) {
+          this.speed += (this.speed < (this.maxspeed * -touchGas.y)) ? this.acceleration * -touchGas.y: 0;
+        } else { // reverse
+          this.speed -= (this.speed > -(this.maxspeed * touchGas.y) / 2) ? this.acceleration * touchGas.y : 0;
+        }
+      } else {
+        this.speed *= this.deceleration;
+      }
+      
+      document.getElementById('gasController').style.filter = `brightness(${1 - (touchGas ? Math.abs(touchGas.y / 2) : 0)})`;
+
     } else {
-      this.speed *= this.deceleration;
+      // steering
+      if (this.engine.keysdown.indexOf('ArrowRight') != -1) {
+        this.steering -= (this.steering > -this.maxsteering) ? this.steeringdelta : 0;
+      } else if (this.engine.keysdown.indexOf('ArrowLeft') != -1) {
+        this.steering += (this.steering < this.maxsteering) ? this.steeringdelta : 0;
+      } else {
+        this.steering *= this.straightendelta;
+      }
+
+      // gas
+      if (this.engine.keysdown.indexOf('ArrowUp') != -1) {
+        this.speed += (this.speed < this.maxspeed) ? this.acceleration: 0;
+      } else if (this.engine.keysdown.indexOf('ArrowDown') != -1) { // reverse
+        this.speed -= (this.speed > -this.maxspeed / 2) ? this.acceleration : 0;
+      } else {
+        this.speed *= this.deceleration;
+      }
     }
+    
 
     this.angle += this.steering * this.speed;
 

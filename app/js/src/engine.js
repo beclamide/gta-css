@@ -1,13 +1,18 @@
 import Pedestrian from './pedestrian.js';
 import Car from './car';
+import { mobileAndTabletCheck } from './utils';
 
 class Engine {
 
   constructor() {
     this.keysdown = [];
+    this.touches = [];
+    this.touchGas;
+    this.touchSteering;
     this.score = 0;
 
     this.cameraCatchup = .1;
+    this.isMobile = mobileAndTabletCheck();
 
     this.map = [
       'wwwwwwwwwwwwwwwwwwwwww',
@@ -63,6 +68,10 @@ class Engine {
     this.bloodsprites = new Image();
     this.bloodsprites.src = 'images/blood.png';
 
+    if (this.isMobile) {
+      document.getElementById('mobileControls').classList.add('visible');
+    }
+
     this.addEvents();
 
     this.generateMap();
@@ -78,13 +87,38 @@ class Engine {
     document.addEventListener('keydown', e => this.keysdown.push(e.code));
 
     document.addEventListener('keyup', e => {
+      let index;
       do {
-        var index = this.keysdown.indexOf(e.code);
+        index = this.keysdown.indexOf(e.code);
         if (index > -1) {
           this.keysdown.splice(index, 1);
         }
       } while (index > -1)
     });
+
+    const gasController = document.getElementById('gasController');
+    gasController.addEventListener('touchstart', e => {
+      e.preventDefault();
+      this.touchGas = this.copyTouch(e.changedTouches[0]);
+    });
+    gasController.addEventListener('touchmove', e => {
+      e.preventDefault();
+      this.touchGas = this.copyTouch(e.changedTouches[0]);
+    });
+    gasController.addEventListener('touchend', () => this.touchGas = null);
+    gasController.addEventListener('touchcancel', () => this.touchGas = null);
+
+    const steeringController = document.getElementById('steeringController');
+    steeringController.addEventListener('touchstart', e => {
+      e.preventDefault();
+      this.touchSteering = this.copyTouch(e.changedTouches[0]);
+    });
+    steeringController.addEventListener('touchmove', e => {
+      e.preventDefault();
+      this.touchSteering = this.copyTouch(e.changedTouches[0]);
+    });
+    steeringController.addEventListener('touchend', () => this.touchSteering = null);
+    steeringController.addEventListener('touchcancel', () => this.touchSteering = null);
 
     document.addEventListener('ped_dead', e => {
       this.car.bloodtyres = 128;
@@ -102,16 +136,32 @@ class Engine {
     })
 
     window.addEventListener('resize', () => this.renderer.setSize(window.innerWidth, window.innerHeight));
+    window.addEventListener('orientationchange', () => this.renderer.setSize(window.innerWidth, window.innerHeight));
+  }
+
+  copyTouch({ identifier, pageX, pageY }) {
+    return { identifier, pageX, pageY };
+  }
+
+  ongoingTouchIndexById(idToFind) {
+    for (var i = 0; i < this.touches.length; i++) {
+      var id = this.touches[i].identifier;
+  
+      if (id == idToFind) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   generateMap() {
     let graph = [];
 
-    for (var i in this.map) {
+    for (let i in this.map) {
 
       graph.push([]);
 
-      for (var v in this.map[i]) {
+      for (let v in this.map[i]) {
 
         let cellWeight = 100;
 
@@ -215,14 +265,13 @@ class Engine {
   generatePeds() {
     this.peds = [];
 
-    for (var i = 0; i < 20; i++) {
+    for (let i = 0; i < 20; i++) {
       this.peds.push(new Pedestrian(this));
       this.scene.add(this.peds[i].object);
     }
   }
 
   update() {
-
     this.updateCar();
     this.updatePedestrians();
     this.updateCamera();

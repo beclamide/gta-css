@@ -1,0 +1,9 @@
+{
+    "name": "GTA CSS",
+    "short_name": "GTA CSS",
+    "start_url": ".",
+    "background_color": "#000",
+    "description": "A Grand Theft Auto style demo using HTML and CSS 3D",
+    "display": "standalone",
+    "orientation": "landscape" 
+}

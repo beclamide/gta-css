@@ -16,11 +16,22 @@ $shadow: rgba(0, 0, 0, 0.25);
   content: '';
 }
 
+* {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
 html,
 body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  margin: auto;;
 }
 
 body {
@@ -165,6 +176,61 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
+
+  & #mobileControls {
+    visibility: hidden;
+
+    &.visible {
+      visibility: visible;
+    }
+
+    & #gasController {
+      background: black;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 100px;
+      height: 150px;
+      margin: 20px;
+      padding: 10px;
+      box-sizing: border-box;
+      border-radius: 20px;
+      background: linear-gradient(0, gray, darkgray 75%, white);
+      box-shadow: $shadow 0 0 20px;
+
+      & span {
+        background: linear-gradient(0, gray, dimgray);
+        width: 15px;
+        height: 90%;
+        margin: 10% 5%;
+        display: inline-block;
+      }
+    }
+
+    & #steeringController {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 150px;
+      height: 150px;
+      margin: 20px;
+      box-sizing: border-box;
+      border-radius: 100%;
+      box-shadow: $shadow 0 0 20px;
+      border: black 20px solid;
+      z-index: 1;
+
+      & > span {
+        background: linear-gradient(0, black 75%, gray);
+        margin-top: 40px;
+        width: 100%;
+        height: 55px;
+        content: '';
+        display: block;
+        z-index: -1;
+      }
+    }
+  }
 
   & .score {
     & h1 {

@@ -3,7 +3,7 @@
 
   <head>
     <title>GTA CSS</title>
-
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
     <meta property="og:title" content="GTA CSS">
     <meta property="og:description" content="A Grand Theft Auto style demo using HTML and CSS 3D">
     <meta property="og:image" content="https://user-images.githubusercontent.com/1726083/112042026-f6378900-8b3e-11eb-84a4-e4a92f86678e.jpg">
@@ -14,6 +14,8 @@
     <meta name="twitter:image:alt" content="A Grand Theft Auto style demo using HTML and CSS 3D">
 
     <meta name="twitter:site" content="@beclamide">
+
+    <link rel="manifest" href="manifest.json">
 
     <script src="src/lib/three.min.js"></script>
     <script src="src/lib/css3d.js"></script>
@@ -27,6 +29,17 @@
       <div class="score">
         <h1 id="currentScore">$0</h1>
       </div>
+
+      <span id="mobileControls">
+        <span id="gasController">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span id="steeringController">
+          <span></span>
+        </span>
+      </span>
 
       <span class="github-button">
         <a class="github-button" href="https://github.com/sponsors/beclamide" data-color-scheme="no-preference: dark; light: dark; dark: dark;" data-icon="octicon-heart" data-size="large" aria-label="Sponsor @beclamide on GitHub">Sponsor</a>
