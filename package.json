@@ -26,6 +26,6 @@
   "scripts": {
     "build": "npx webpack --config webpack.prod.js",
     "serve": "npx webpack serve --open --config webpack.dev.js",
-    "start": "npx run build && http-server ./dist"
+    "start": "http-server ./dist"
   }
 }
