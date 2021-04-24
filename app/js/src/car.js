@@ -57,7 +57,7 @@ class Car {
     this.object.position.x = 700;
     this.object.position.y = 800;
     this.object.position.z = -5;
-    this.engine.scene.add(this.object);
+    if (window.chapter >= 5) this.engine.scene.add(this.object);
   }
 
   checkCollision() {
@@ -223,7 +223,7 @@ class Car {
 
     this.object.children[0].rotation.z = this.object.children[1].rotation.z = (90 + (this.steering * 2e3)) * (Math.PI / 180);
 
-    if (this.checkCollision()) {
+    if (window.chapter >= 7 && this.checkCollision()) {
       this.object.position.x = prev.x;
       this.object.position.y = prev.y;
       this.object.rotation.z = prev.rot;

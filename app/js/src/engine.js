@@ -63,7 +63,7 @@ class Engine {
     c.position.y = ~~((this.map.length * 100) / 2) - 50;
     c.position.z = -1;
     c.rotation.x = 180 * (Math.PI / 180)
-    this.scene.add(c);
+    if (window.chapter >= 12) this.scene.add(c);
 
     this.bloodsprites = new Image();
     this.bloodsprites.src = 'images/blood.png';
@@ -78,7 +78,9 @@ class Engine {
 
     this.addCar();
 
-    this.generatePeds();
+    if (window.chapter >= 10) {
+      this.generatePeds();
+    }
 
     this.render();
   }
@@ -121,15 +123,17 @@ class Engine {
     steeringController.addEventListener('touchcancel', () => this.touchSteering = null);
 
     document.addEventListener('ped_dead', e => {
-      this.car.bloodtyres = 128;
-      this.ctx.globalAlpha = 1;
-      this.ctx.save();
-      this.ctx.translate(e.detail.x + 50, e.detail.y + 50);
-      this.ctx.rotate(this.car.object.rotation.z);
-      this.ctx.translate(-64, -32);
-      this.ctx.scale(1 + (Math.abs(this.car.speed) * .25), 1);
-      this.ctx.drawImage(this.bloodsprites, 64 * Math.floor(Math.random() * 4), 0, 64, 64, 0, 0, 64, 64);
-      this.ctx.restore();
+      if (window.chapter >= 13) {
+        this.car.bloodtyres = 128;
+        this.ctx.globalAlpha = 1;
+        this.ctx.save();
+        this.ctx.translate(e.detail.x + 50, e.detail.y + 50);
+        this.ctx.rotate(this.car.object.rotation.z);
+        this.ctx.translate(-64, -32);
+        this.ctx.scale(1 + (Math.abs(this.car.speed) * .25), 1);
+        this.ctx.drawImage(this.bloodsprites, 64 * Math.floor(Math.random() * 4), 0, 64, 64, 0, 0, 64, 64);
+        this.ctx.restore();
+      }
 
       this.score += 100;
       document.getElementById('currentScore').innerText = `$${this.score}`;
@@ -278,7 +282,7 @@ class Engine {
   }
 
   updateCar() {
-    if (!this.car) return;
+    if (!this.car || window.chapter <= 5) return;
 
     this.car.tick();
   }
@@ -293,6 +297,13 @@ class Engine {
   }
 
   updateCamera() {
+    if (window.chapter === 4) {
+      this.camera.position.x = this.camera.position.y = 1000;
+      this.camera.position.z = -2000;
+      this.camera.lookAt(new THREE.Vector3(this.camera.position.x, this.camera.position.y, 0));
+      return;
+    }
+
     this.camera.position.x -= (this.camera.position.x - this.car.object.position.x) * this.cameraCatchup;
     this.camera.position.y -= (this.camera.position.y - this.car.object.position.y) * this.cameraCatchup;
     this.camera.position.z -= (this.camera.position.z + 500 + Math.abs(this.car.speed * 15)) * this.cameraCatchup;

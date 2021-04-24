@@ -1,0 +1,453 @@
+<!doctype html>
+<html>
+
+  <head>
+    <title>GTA CSS - Slides</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' >
+    <meta property="og:title" content="GTA CSS">
+    <meta property="og:description" content="A Grand Theft Auto style demo using HTML and CSS 3D">
+    <meta property="og:image" content="https://user-images.githubusercontent.com/1726083/112042026-f6378900-8b3e-11eb-84a4-e4a92f86678e.jpg">
+    <meta property="og:url" content="https://gta-css.herokuapp.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:site_name" content="GTA CSS">
+    <meta name="twitter:image:alt" content="A Grand Theft Auto style demo using HTML and CSS 3D">
+
+    <meta name="twitter:site" content="@beclamide">
+
+    <link rel="manifest" href="manifest.json">
+  </head>
+
+  <body>
+    <div class="reveal">
+        <div class="slides">
+
+          <!-- Intro -->
+          <section>
+            <h1 class="r-fit-text">GTA CSS</h1>
+          </section>
+          <section>
+            <h1>How to make</h1>
+            <h1>Grand Theft Auto</h1>
+            <h1>using CSS</h1>
+            <h3 class="fragment">(as much as possible)</h3>
+          </section>
+
+          <!-- How it started -->
+          <section>
+            <h1 class="r-fit-text">How it started</h1>
+          </section>
+          <section>
+            <h2 class="r-fit-text">What is CSS 3D?</h2>
+            <ul>
+              <li class="fragment">It's a method of manipulating DOM elements in 3D without any plugins or javascript</li>
+              <li class="fragment">You can use transform properties to scale, skew, translate, and rotate DOM elements</li>
+              <li class="fragment">Animation can be achieved by using transitions, the same as normal 2D CSS</li>
+              <li class="fragment">Everything remains part of the DOM and keep their HTMLElement properties and events</li>
+            </ul>
+          </section>
+          <section>
+            <h2 class="r-fit-text">What is CSS 3D capable of?</h2>
+            <ul>
+              <li class="fragment">Try and make a demo that shows what CSS 3D can do</li>
+              <li class="fragment">Just use CSS with very little JavaScript</li>
+              <li class="fragment">Start with a cube</li>
+              <li class="fragment">Don't get carried away</li>
+              <li class="fragment">... just make a cube</li>
+              <li class="fragment">... maybe make it move round the screen</li>
+            </ul>
+          </section>
+          <section>
+            <img src="/images/slides/gta.jpg" />
+          </section>
+          <section>
+            <iframe height="600" style="width: 100%;" scrolling="no" title="Grand Theft CSS v1.0" src="https://codepen.io/Beclamide/embed/JoVNaP?height=265&theme-id=dark&default-tab=result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+              See the Pen <a href='https://codepen.io/Beclamide/pen/JoVNaP'>Grand Theft CSS v1.0</a> by John Bower
+              (<a href='https://codepen.io/Beclamide'>@Beclamide</a>) on <a href='https://codepen.io'>CodePen</a>.
+            </iframe>
+          </section>
+
+          <!-- -->
+
+          <!-- Switching to THREE JS -->
+          <section>
+            <h1 class="r-fit-text">Switching to THREE JS</h1>
+          </section>
+          <section>
+            <h2>Why THREE JS?</h2>
+            <ul>
+              <li class="fragment">THREE has a vast array of Matrix utilities</li>
+              <li class="fragment">It can support multiple rendering plugins</li>
+              <li class="fragment">It now includes a CSS 3D renderer (didn't at the time I made this demo)</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Initializing THREE JS</h2>
+            <pre><code data-trim data-noescape data-line-numbers="2-9|11|13-15|17-18">
+init() {
+  this.camera = new THREE.PerspectiveCamera(40,
+    window.innerWidth / window.innerHeight,
+    0.01,
+    10000);
+  this.camera.up.set(0, -1, 0);
+  this.camera.position.x = 500;
+  this.camera.position.y = 500;
+  this.camera.position.z = -600;
+
+  this.scene = new THREE.Scene();
+
+  this.renderer = new THREE.CSS3DRenderer();
+  this.renderer.setSize(window.innerWidth,
+    window.innerHeight);
+
+  document.getElementById('container')
+    .appendChild(this.renderer.domElement);
+}
+            </code></pre>
+          </section>
+
+
+          <!-- Creating the map -->
+          <section>
+            <h1 class="r-fit-text">Creating the Map</h1>
+          </section>
+          <section>
+            <h2>Map structure</h2>
+            <pre><code data-trim data-noescape >
+this.map = [
+    'wwwwwwwwwwwwwwwwwwwwww',
+    'wwwwwwwwwwwwwwwwwwwwww',
+    'wwwww-----wwwwwwwwwwww',
+    'wwwww-----wwwwwwwwwwww',
+    'wwwww-----xxxxxxxxxxxw',
+    'wwwwwwww--x---------xw',
+    'wwxxxxxx--x-rrrrrrr-xw',
+    'wwx-------x-rrrrrrr-xw',
+    'wwx-x--rr---rr---rr-xw',
+    'wwx-x-rrrrrrrr-x-rr-xw',
+    'wwx---rrrrrrrr-x-rr-xw',
+    'wwxgg-rr----rr-x-rr-xw',
+    'wwxgg-rr-xx-rr-x-rr-xw',
+    'wwxgg----xx-rr---rr-xw',
+    'wwxgg-------rrrrrrr-xw',
+    'wwxxxx------rrrrrrr-xw',
+    'wwwwxxxxxxx-rr---rr-xw',
+    'wwwwwwwwwxx-rr-x-rr-xw',
+    'wwwwwwwwwxx-rr-x-rr-xw',
+    'wwwwwwwwwxx-rr-x-rr-xw',
+    'wwwwwwwwwxx---------xw',
+    'wwwwwwwwwxxxxxxxxxxxxw',
+    'wwwwwwwwwwwwwwwwwwwwww',
+  ];
+}
+          </code></pre>
+        </section>
+        <section>
+          <h2>Classes</h2>
+          <img class="stretch" src="/images/slides/building.png" />
+        </section>
+        <section>
+          <h2>SCSS</h2>
+          <pre><code>
+            %pseudo-block {
+              position: absolute;
+              width: 100px;
+              height: 200px;
+              box-sizing: border-box;
+              backface-visibility: hidden;
+              z-index: 10;
+              content: '';
+            }
+
+            .bottom, .top, .back, .front, .left, .right {
+              @extend %pseudo-block;
+            }
+          </code></pre>
+        </section>
+        <section>
+          <h2>THREE JS Objects</h2>
+          <pre><code data-line-numbers>
+generateMap() {
+  for (let i in this.map) {
+    for (let v in this.map[i]) {
+
+      let building;
+
+      if (this.map[i][v] == 'x') {
+
+        //place building
+        let bdiv = document.createElement('building');
+        building = new THREE.CSS3DObject(bdiv);
+
+        let topdiv = document.createElement('div');
+        topdiv.className = 'top';
+        let top = new THREE.CSS3DObject(topdiv);
+        top.position.z = -200;
+        top.rotation.x = 180 * Math.PI / 180;
+
+        let rightdiv = document.createElement('div');
+        rightdiv.className = 'right';
+        let right = new THREE.CSS3DObject(rightdiv);
+        right.position.x = 50;
+        right.position.z = -100;
+        right.rotation.x = -90 * Math.PI / 180;
+        right.rotation.y = 90 * Math.PI / 180;
+
+        let leftdiv = document.createElement('div');
+        leftdiv.className = 'left';
+        let left = new THREE.CSS3DObject(leftdiv);
+        left.position.x = -50;
+        left.position.z = -100;
+        left.rotation.x = -90 * Math.PI / 180;
+        left.rotation.y = -90 * Math.PI / 180;
+
+        let frontdiv = document.createElement('div');
+        frontdiv.className = 'front';
+        let front = new THREE.CSS3DObject(frontdiv);
+        front.position.y = 50;
+        front.position.z = -100;
+        front.rotation.x = -90 * Math.PI / 180;
+
+        let backdiv = document.createElement('div');
+        backdiv.className = 'back';
+        let back = new THREE.CSS3DObject(backdiv);
+        back.position.y = -50;
+        back.position.z = -100;
+        back.rotation.y = -180 * Math.PI / 180;
+        back.rotation.x = -90 * Math.PI / 180;
+
+        building.add(top).add(right).add(left).add(front).add(back);
+
+      } else {
+        let bdiv = document.createElement('building');
+        building = new THREE.CSS3DObject(bdiv);
+
+        let bottomdiv = document.createElement('div');
+        bottomdiv.className = 'bottom ' + this.map[i][v];
+
+        let bottom = new THREE.CSS3DObject(bottomdiv);
+        bottom.rotation.x = 180 * Math.PI / 180;
+        bottom.position.z = 0;
+        building.add(bottom);
+      }
+
+      building.position.x = v * 100;
+      building.position.y = i * 100;
+      building.position.z = 0;
+      this.scene.add(building);
+    }
+  }
+}
+            </code></pre>
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch4.html">
+            </iframe>
+          </section>
+
+
+
+
+          <!-- 5. Adding the car -->
+          <section>
+            <h1>Adding the car</h1>
+          </section>
+          <section>
+            <h2>SCSS</h2>
+            <pre><code>
+car {
+  @extend %pseudo-block;
+  border: 1px solid green;
+  width: 70px;
+  height: 37px;
+  z-index: 10;
+}
+
+wheel {
+  @extend %pseudo-block;
+  border: 1px solid red;
+  width: 5px;
+  height: 10px;
+}
+            </code></pre>
+          </section>
+          <section>
+            <h2>THREE JS Object</h2>
+            <pre><code data-trim data-noescape data-line-numbers>
+class Car {
+  constructor() {
+    let cardiv = document.createElement('car');
+    let body = new THREE.CSS3DObject(cardiv);
+    body.rotation.x = 180 * (Math.PI / 180);
+    body.rotation.z = 180 * (Math.PI / 180);
+
+    let frontLeftWheel = document.createElement('wheel');
+    let fl = new THREE.CSS3DObject(frontLeftWheel);
+    fl.rotation.z = 90 * (Math.PI / 180);
+    fl.position.x = 20;
+    fl.position.y = -15;
+    fl.position.z = 1;
+    fl.rotation.x = 180 * (Math.PI / 180);
+
+    let frontRightWheel = document.createElement('wheel');
+    let fr = new THREE.CSS3DObject(frontRightWheel);
+    fr.rotation.z = 90 * (Math.PI / 180);
+    fr.position.x = 20;
+    fr.position.y = 15;
+    fr.position.z = 1;
+    fr.rotation.x = 180 * (Math.PI / 180);
+
+    let rearLeftWheel = document.createElement('wheel');
+    let rl = new THREE.CSS3DObject(rearLeftWheel);
+    rl.rotation.z = 90 * (Math.PI / 180);
+    rl.position.x = -20;
+    rl.position.y = -15;
+    rl.position.z = 1;
+    rl.rotation.x = 180 * (Math.PI / 180);
+
+    let rearRightWheel = document.createElement('wheel');
+    let rr = new THREE.CSS3DObject(rearRightWheel);
+    rr.rotation.z = 90 * (Math.PI / 180);
+    rr.position.x = -20;
+    rr.position.y = 15;
+    rr.position.z = 1;
+    rr.rotation.x = 180 * (Math.PI / 180);
+
+    let carwrapper = document.createElement('div');
+    this.object = new THREE.CSS3DObject(carwrapper);
+    this.object.add(fl).add(fr).add(rl).add(rr).add(body);
+    this.object.position.x = 700;
+    this.object.position.y = 800;
+    this.object.position.z = -5;
+    this.engine.scene.add(this.object);
+  }
+}
+            </code></pre>
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch5.html">
+            </iframe>
+          </section>
+
+
+
+          <!-- Adding Movement -->
+          <section>
+            <h1>Making the car move</h1>
+          </section>
+          <section>
+            <img class="stretch" src="/images/slides/movement.png" />
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch6.html">
+            </iframe>
+          </section>
+
+
+
+          <!-- Adding Collisions -->
+          <section>
+            <h1>Adding Collision Detection</h1>
+          </section>
+          <section>
+            <img class="stretch" src="/images/slides/collision.png" />
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch7.html">
+            </iframe>
+          </section>
+
+
+          <!-- Adding Textures -->
+          <section>
+            <h1>Adding Textures</h1>
+          </section>
+          <section>
+            <img src="/images/tiles.jpg" />
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch8.html">
+            </iframe>
+          </section>
+
+
+          <!-- Lighting -->
+          <section>
+            <h1>Lighting</h1>
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch9.html">
+            </iframe>
+          </section>
+
+
+
+          <!-- Adding Pedestrians -->
+          <section>
+            <h1>Adding Pedestrians</h1>
+          </section>
+          <section>
+            <img src="/images/ped.gif" />
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch10.html">
+            </iframe>
+          </section>
+
+
+          <!-- Adding UI -->
+          <section>
+            <h1>Adding UI</h1>
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch11.html">
+            </iframe>
+          </section>
+
+
+          <!-- Tire Marks -->
+          <section>
+            <h1>Tire Marks</h1>
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch12.html">
+            </iframe>
+          </section>
+
+
+          <!-- ... getting carried away -->
+          <section>
+            <h1>... Getting carried away!</h1>
+          </section>
+          <section>
+            <img src="/images/blood.png" />
+          </section>
+          <section>
+            <iframe width="100%" height="600" data-src="/ch13.html">
+            </iframe>
+          </section>
+
+
+          <!-- Performance -->
+          <section>
+            <h1>Performance</h1>
+          </section>
+
+
+          <!-- Conclusion -->
+          <section>
+            <h1>Conclusion</h1>
+          </section>
+
+
+          <!-- What Next? -->
+          <section>
+            <h1>What Next?</h1>
+          </section>
+        </div>
+      </div>
+
+    <script src="src/slides.bundle.js"></script>
+  </body>
+
+</html>
