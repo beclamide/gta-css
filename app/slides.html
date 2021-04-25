@@ -47,7 +47,7 @@
             </ul>
           </section>
           <section>
-            <h2 class="r-fit-text">What is CSS 3D capable of?</h2>
+            <h2 class="r-fit-text">How to test what CSS 3D is capable of?</h2>
             <ul>
               <li class="fragment">Try and make a demo that shows what CSS 3D can do</li>
               <li class="fragment">Just use CSS with very little JavaScript</li>
@@ -66,6 +66,23 @@
               (<a href='https://codepen.io/Beclamide'>@Beclamide</a>) on <a href='https://codepen.io'>CodePen</a>.
             </iframe>
           </section>
+          <section>
+            <h2 class="r-fit-text">Bitwise double NOT operator (~~)</h2>
+
+            <table class="r-fit-text">
+              <tbody><tr><th>#</th><th>Browser</th><th>Math.floor()</th><th>Bitwise double NOT ~~</th></tr>
+              <tr><td>#1</td><td>Firefox 7.0.1</td><td>42ms</td><td>29ms</td></tr>
+              <tr><td>#2</td><td>Firefox 7.0.1</td><td>44ms</td><td>28ms</td></tr>
+              <tr><td>#3</td><td>Chrome 15</td><td>63ms</td><td>64ms</td></tr>
+              <tr><td>#4</td><td>Chrome 15</td><td>63ms</td><td>68ms</td></tr>
+              <tr><td>#5</td><td>IE8</td><td>265ms</td><td>192ms</td></tr>
+              <tr><td>#6</td><td>IE8</td><td>324ms</td><td>190ms</td></tr>
+              </tbody></table>
+            <small>
+              <a target="_blank" href="http://rocha.la/JavaScript-bitwise-operators-in-practice">source</a>
+            </small>
+          </section>
+
 
           <!-- -->
 
@@ -78,7 +95,7 @@
             <ul>
               <li class="fragment">THREE has a vast array of Matrix utilities</li>
               <li class="fragment">It can support multiple rendering plugins</li>
-              <li class="fragment">It now includes a CSS 3D renderer (didn't at the time I made this demo)</li>
+              <li class="fragment">It now includes a CSS 3D renderer</li>
             </ul>
           </section>
           <section>
@@ -241,6 +258,21 @@ generateMap() {
             </code></pre>
           </section>
           <section>
+            <h2>Render Loop</h2>
+            <h3>engine.js</h3>
+            <pre><code>
+update() {
+  this.updateCamera();
+}
+
+render() {
+  this.update();
+  this.renderer.render(this.scene, this.camera);
+  window.requestAnimationFrame(() => this.render());
+}
+            </code></pre>
+          </section>
+          <section>
             <iframe width="100%" height="600" data-src="/ch4.html">
             </iframe>
           </section>
@@ -350,7 +382,50 @@ class Car {
             <h1>Adding Collision Detection</h1>
           </section>
           <section>
+            <h2>Simple 2-point collision detection</h2>
             <img class="stretch" src="/images/slides/collision.png" />
+          </section>
+          <section>
+            <pre><code>
+checkCollision() {
+  let rot = this.object.rotation.z;
+  let col = false;
+
+  let f = {
+    x: this.object.position.x + (30 * Math.cos(rot)) - (Math.sin(rot)),
+    y: this.object.position.y + (30 * Math.sin(rot)) + (Math.cos(rot))
+  }
+
+  let r = {
+    x: this.object.position.x + (-30 * Math.cos(rot)) - (Math.sin(rot)),
+    y: this.object.position.y + (-30 * Math.sin(rot)) + (Math.cos(rot))
+  }
+
+  let fx = ~~((f.x + 50) / 100);
+  let fy = ~~((f.y + 50) / 100);
+  let rx = ~~((r.x + 50) / 100);
+  let ry = ~~((r.y + 50) / 100);
+
+  if (fx < 0 || fy < 0) return;
+  if (rx < 0 || ry < 0) return;
+  if (fy > this.engine.map.length) return;
+  if (ry > this.engine.map.length) return;
+  if (fx > this.engine.map[fy].length) return;
+  if (rx > this.engine.map[ry].length) return;
+
+  if (this.engine.map[fy][fx] == 'x') {
+    this.speed = -this.speed * .5;
+    return true;
+  }
+
+  if (this.engine.map[ry][rx] == 'x') {
+    this.speed = -this.speed * .5;
+    return true;
+  }
+
+  return col;
+}
+            </code></pre>
           </section>
           <section>
             <iframe width="100%" height="600" data-src="/ch7.html">
@@ -366,6 +441,53 @@ class Car {
             <img src="/images/tiles.jpg" />
           </section>
           <section>
+            <pre><code>
+$tiles: '../images/tiles.jpg';
+
+%pseudo-block {
+  ...
+  background: 0px 0px/400px url($tiles);
+  background-blend-mode: multiply;
+  image-rendering: pixelated;
+}
+
+.bottom {
+  ...
+  background-position: -200px 0px;
+
+  &.r {
+    background-position: -100px 0px;
+  }
+
+  &.g {
+    background-position: -299px 0px;
+  }
+
+  &.w {
+    background-position: -100px -100px;
+    animation-name: ANIMATE-WATER;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+}
+
+.top {
+  ...
+  background-position: 0px -200px;
+}
+
+@keyframes ANIMATE-WATER {
+  from {
+    background-position-x: -100px;
+  }
+  to { 
+    background-position-x: -200px;
+  }
+}
+            </code></pre>
+          </section>
+          <section>
             <iframe width="100%" height="600" data-src="/ch8.html">
             </iframe>
           </section>
@@ -374,6 +496,65 @@ class Car {
           <!-- Lighting -->
           <section>
             <h1>Lighting</h1>
+          </section>
+          <section>
+            <img src="/images/slides/lighting.png" style="float:right; max-width:25%" />
+            <h2 style="display: block;">Lightmapping</h2>
+            <ul style="display: block;">
+              <li>Lightmaps are simulated and ‘baked’ when the map is compiled. Not real-time.</li>
+              <li>Lightmaps are overlaid on surface textures using Surface Caching in texture space.</li>
+              <li>Only static lights can cast shadows for lightmaps. Shadows don’t affect characters.</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Lightmapping in CSS</h2>
+            <ul>
+              <li>Use classes to add style to certain elements</li>
+              <li>Calculate styles on load for this demo</li>
+            </ul>
+          </section>
+
+          <section>
+            <img style="max-width: 33%" src="/images/slides/lightmap1.png" />
+            <img style="max-width: 33%" src="/images/slides/lightmap2.png" />
+            <img style="max-width: 33%" src="/images/slides/lightmap3.png" />
+          </section>
+
+          <section>
+            <h2>Background Layering</h2>
+            <pre><code>
+.myclass {
+  background: background1, background 2, ..., backgroundN;
+}
+            </code></pre>
+          </section>
+
+          <section>
+            <img style="max-width: 33%" src="/images/slides/lightmap-layered1.png" />
+            <img style="max-width: 33%" src="/images/slides/lightmap-layered2.png" />
+            <img style="max-width: 33%" src="/images/slides/lightmap-layered3.png" />
+          </section>
+
+          <section>
+            <pre><code>
+$shadow: rgba(0, 0, 0, 0.25);
+.bottom {
+  ...
+  &.shade {
+    &.full {
+      background-color: $shadow;
+    }
+
+    &.sw {
+      background: linear-gradient(45deg, $shadow 50%, white 50%), $background;
+    }
+
+    &.ne {
+      background: linear-gradient(45deg, white 50%, $shadow 50%), $background;
+    }
+  }
+}
+            </code></pre>
           </section>
           <section>
             <iframe width="100%" height="600" data-src="/ch9.html">
@@ -387,7 +568,129 @@ class Car {
             <h1>Adding Pedestrians</h1>
           </section>
           <section>
-            <img src="/images/ped.gif" />
+            <img src="/images/ped.gif"/>
+            <small style="display: block;">
+              <a target="_blank" href="https://opengameart.org/content/animated-top-down-zombie">source</a>
+            </small>
+          </section>
+          <section>
+            <h2>A* Algorithm</h2>
+            <img src="/images/slides/astar.png" />
+          </section>
+          <section>
+            <h2>A* in JavaScript</h2>
+            <a target="_blank" href="https://github.com/bgrins/javascript-astar">https://github.com/bgrins/javascript-astar</a>
+          </section>
+          <section>
+            <h2>Adding weight to each tile</h2>
+            <pre><code>
+generateMap() {
+  let graph = [];
+
+  for (let i in this.map) {
+
+    graph.push([]);
+
+    for (let v in this.map[i]) {
+
+      let cellWeight = 100;
+
+      if (this.map[i][v] == '-') {
+        cellWeight = 1;
+      } else if (this.map[i][v] == 'r') {
+        cellWeight = 3;
+      }
+
+      ...
+
+      graph[graph.length - 1].push(cellWeight);
+
+    }
+  }
+
+  this.graph = new Graph(graph);
+}
+            </code></pre>
+          </section>
+
+          <section>
+            <h2>Pedestrian path detection</h2>
+            <pre><code>
+getRoute(startX, startY) {
+  let nextNode;
+
+  while (!nextNode) {
+    let rX = ~~(Math.random() * this.engine.map.length);
+    let rY = ~~(Math.random() * this.engine.map[0].length);
+    if (this.engine.graph.grid[rX][rY].weight == 1) {
+      nextNode = {
+        x: rX,
+        y: rY
+      }
+    }
+  }
+
+  this.route = astar.search(this.engine.graph, this.engine.graph.grid[startX][startY], this.engine.graph.grid[nextNode.x][nextNode.y]);
+  this.step = 0;
+  this.speed = Math.random() / 100 + 0.01;
+  if (this.route.length == 0) {
+    this.getRoute(startX, startY)
+  }
+  this.setTarget(this.route[0].x, this.route[0].y);
+}
+            </code></pre>
+          </section>
+          <section>
+            <h2>Render Tick</h2>
+            <pre><code>
+tick() {
+  if (this.dead) return;
+
+  this.lerp += this.speed;
+  const y = this.startPosition.y + (this.targetPosition.y - this.startPosition.y) * this.lerp;
+  const x = this.startPosition.x + (this.targetPosition.x - this.startPosition.x) * this.lerp;
+  this.setPosition(x, y);
+
+  // angle
+  const rot = Math.atan2(this.targetPosition.x - this.startPosition.x, this.startPosition.y - this.targetPosition.y);
+  this.setRotation(rot + (Math.PI / 180 * 90));
+
+  if (this.lerp >= 1) {
+    this.lerp = 0;
+    this.step++;
+
+    if (this.step >= this.route.length) {
+      this.getRoute(this.route[this.route.length - 1].x, this.route[this.route.length - 1].y);
+    } else {
+      this.setTarget(this.route[this.step].x, this.route[this.step].y);
+    }
+  }
+}
+            </code></pre>
+          </section>
+          <section>
+            <h2>Collision Detection</h2>
+            <pre><code>
+checkCollision(collider) {
+  let x1 = this.object.position.x - 20;
+  let x2 = this.object.position.x + 20;
+  let y1 = this.object.position.y - 20;
+  let y2 = this.object.position.y + 20;
+  if ((x1 <= collider.object.position.x) && (collider.object.position.x <= x2) &&
+    (y1 <= collider.object.position.y) && (collider.object.position.y <= y2)) {
+
+      document.dispatchEvent(new CustomEvent('ped_dead', {
+        detail: {
+          x: this.object.position.x,
+          y: this.object.position.y,
+          rot: this.object.rotation.z
+        }
+      }));
+
+    this.spawn();
+  }
+}
+            </code></pre>
           </section>
           <section>
             <iframe width="100%" height="600" data-src="/ch10.html">
@@ -395,13 +698,27 @@ class Car {
           </section>
 
 
-          <!-- Adding UI -->
+          <!-- Making it a game -->
           <section>
-            <h1>Adding UI</h1>
+            <h1>Making it a game</h1>
+          </section>
+          <section>
+            <h2>Tracking the score</h2>
+            <pre><code>
+document.addEventListener('ped_dead', e => {
+  this.score += 100;
+  document.getElementById('currentScore').innerText = `$${this.score}`;
+})
+            </code></pre>
           </section>
           <section>
             <iframe width="100%" height="600" data-src="/ch11.html">
             </iframe>
+          </section>
+          
+
+          <section>
+            <h1>... Getting carried away, again!</h1>
           </section>
 
 
@@ -410,17 +727,121 @@ class Car {
             <h1>Tire Marks</h1>
           </section>
           <section>
+            <h2>Using a canvas</h2>
+            <h3>engine.js</h3>
+            <pre><code>
+init() {
+  ...
+
+  this.canvas = document.createElement('canvas');
+  this.canvas.width = this.map[0].length * 100;
+  this.canvas.height = this.map.length * 100;
+  this.ctx = this.canvas.getContext('2d');
+  let c = new THREE.CSS3DObject(this.canvas);
+  c.position.x = ~~((this.map[0].length * 100) / 2) - 50;
+  c.position.y = ~~((this.map.length * 100) / 2) - 50;
+  c.position.z = -1;
+  c.rotation.x = 180 * (Math.PI / 180)
+  this.scene.add(c);
+}
+            </code></pre>
+          </section>
+          <section>
+            <h3>car.js</h3>
+            <pre><code>
+updateSkidmarks() {
+  let rot = this.object.rotation.z;
+  let ox = this.object.position.x;
+  let oy = (this.object.position.y);
+  let px = this.object.position.x - 25;
+  let py = (this.object.position.y) + 15;
+  let l = {
+    x: Math.cos(rot) * (px - ox) - Math.sin(rot) * (py - oy) + ox,
+    y: Math.sin(rot) * (px - ox) + Math.cos(rot) * (py - oy) + oy
+  }
+
+  py = (this.object.position.y) - 15;
+  let r = {
+    x: Math.cos(rot) * (px - ox) - Math.sin(rot) * (py - oy) + ox,
+    y: Math.sin(rot) * (px - ox) + Math.cos(rot) * (py - oy) + oy
+  }
+
+  let a = ((this.maxspeed - Math.abs(this.speed)) / this.maxspeed) + (Math.abs(this.steering * 5));
+  this.engine.ctx.globalAlpha = Math.min(a, .25);
+  this.engine.ctx.strokeStyle = `rgba(0, 0, 0, 1)`;
+
+  if (this.prevmark) {
+    this.engine.ctx.lineWidth = 3;
+    this.engine.ctx.setLineDash([16 / this.speed, 8 / this.speed]);
+
+    this.engine.ctx.beginPath();
+    this.engine.ctx.moveTo(this.prevmark.l.x + 50, this.prevmark.l.y + 50);
+    this.engine.ctx.lineTo(l.x + 50, l.y + 50);
+
+    this.engine.ctx.moveTo(this.prevmark.r.x + 50, this.prevmark.r.y + 50);
+    this.engine.ctx.lineTo(r.x + 50, r.y + 50);
+    this.engine.ctx.stroke();
+  }
+
+  this.prevmark = {
+    l: l,
+    r: r
+  }
+}
+            </code></pre>
+          </section>
+          <section>
             <iframe width="100%" height="600" data-src="/ch12.html">
             </iframe>
           </section>
 
 
-          <!-- ... getting carried away -->
+          <!-- gore -->
           <section>
-            <h1>... Getting carried away!</h1>
+            <h1>Gore</h1>
           </section>
           <section>
-            <img src="/images/blood.png" />
+            <img src="/images/blood.png" style="width:100%" />
+          </section>
+          <section>
+            <h2>Splats</h2>
+            <pre><code>
+document.addEventListener('ped_dead', e => {
+  this.car.bloodtyres = 128;
+  this.ctx.globalAlpha = 1;
+  this.ctx.save();
+  this.ctx.translate(e.detail.x + 50, e.detail.y + 50);
+  this.ctx.rotate(this.car.object.rotation.z);
+  this.ctx.translate(-64, -32);
+  this.ctx.scale(1 + (Math.abs(this.car.speed) * .25), 1);
+  this.ctx.drawImage(this.bloodsprites, 64 * Math.floor(Math.random() * 4), 0, 64, 64, 0, 0, 64, 64);
+  this.ctx.restore();
+
+  this.score += 100;
+  document.getElementById('currentScore').innerText = `$${this.score}`;
+})
+            </code></pre>
+          </section>
+          <section>
+            <h2>Smears</h2>
+            <pre><code>
+updateSkidmarks() {
+  ...
+
+  if (this.bloodtyres > 0) {
+    this.bloodtyres -= 4;
+  } else {
+    this.bloodtyres = 0;
+  }
+
+  let a = ((this.maxspeed - Math.abs(this.speed)) / this.maxspeed) + (Math.abs(this.steering * 5));
+  a += this.bloodtyres / 128;
+  this.engine.ctx.globalAlpha = Math.min(a, .25);
+  this.engine.ctx.strokeStyle = `rgba(${this.bloodtyres}, 0, 0, 1)`;
+
+  ...
+}
+            </code></pre>
           </section>
           <section>
             <iframe width="100%" height="600" data-src="/ch13.html">
@@ -432,17 +853,48 @@ class Car {
           <section>
             <h1>Performance</h1>
           </section>
+          <section>
+            <h2>Rendering Performance on Desktop is *bad*</h2>
+            <h3>More time spent painting to the DOM than processing game logic</h3>
+          </section>
 
 
           <!-- Conclusion -->
           <section>
             <h1>Conclusion</h1>
+            <ul>
+              <li class="fragment">CSS3D isn't great for making games. Rendering is too flakey.</li>
+              <li class="fragment">CSS3D is fantastic for rich multimedia experiences</li>
+              <li class="fragment">If your website doesn&apos;t allow you to run over zombies, how can you be taken seriously??</li>
+            </ul>
           </section>
 
 
           <!-- What Next? -->
           <section>
             <h1>What Next?</h1>
+            <h2>Clone the repo. Play with the code. See what you can do with it!</h2>
+            <a href="https://github.com/beclamide/gta-css" target="_blank">https://github.com/beclamide/gta-css</a>
+          </section>
+
+          <section>
+            <h1>Thanks!</h1>
+            <table style="max-width:50%">
+              <tbody>
+                <tr>
+                  <td><img src="/images/slides/twitter.png" style="max-width:25%"/></td>
+                  <td><a href="http://www.twitter.com/beclamide">@beclamide</a></td>
+                </tr>
+                <tr>
+                  <td><img src="/images/slides/github.png" style="max-width:25%"/></td>
+                  <td><a href="http://www.github.com/beclamide">@beclamide</a></td>
+                </tr>
+                <tr>
+                  <td><img src="/images/slides/linkedin.png" style="max-width:25%"/></td>
+                  <td><a href="https://www.linkedin.com/in/johnmbower/">@johnmbower</a></td>
+                </tr>
+              </tbody>
+            </table>
           </section>
         </div>
       </div>

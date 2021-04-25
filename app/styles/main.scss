@@ -1,6 +1,5 @@
 
 $tiles: '../images/tiles.jpg';
-
 $background: -200px 0px/400px url($tiles);
 $shadow: rgba(0, 0, 0, 0.25);
 
@@ -85,8 +84,11 @@ building {
   visibility: hidden;
 }
 
-.bottom {
+.bottom, .top, .back, .front, .left, .right {
   @extend %pseudo-block;
+}
+
+.bottom {
   background-color: white;
   background-position: -200px 0px;
   width: 100px;
@@ -122,12 +124,7 @@ building {
   }
 }
 
-.bottom, .top, .back, .front, .left, .right {
-  @extend %pseudo-block;
-}
-
 .top {
-  @extend %pseudo-block;
   background-color: white;
   background-position: 0px -200px;
   width: 100px;
@@ -135,22 +132,18 @@ building {
 }
 
 .back {
-  @extend %pseudo-block;
   background-color: white;
 }
 
 .front {
-  @extend %pseudo-block;
   background-color: darkgrey;
 }
 
 .left {
-  @extend %pseudo-block;
   background-color: lightgrey;
 }
 
 .right {
-  @extend %pseudo-block;
   background-color: grey;
 }
 
