@@ -1,18 +1,16 @@
 
-
-$background: -200px 0px/400px url(/images/tiles.jpg);
+$tiles: '../images/tiles.jpg';
+$background: -200px 0px/400px url($tiles);
 $shadow: rgba(0, 0, 0, 0.25);
 
 %pseudo-block {
-  position: absolute;
   width: 100px;
   height: 200px;
   box-sizing: border-box;
-  background: 0px 0px/400px url(/images/tiles.jpg);
+  background: 0px 0px/400px url($tiles);
   background-blend-mode: multiply;
   backface-visibility: hidden;
   image-rendering: pixelated;
-  z-index: 10;
   content: '';
 }
 
@@ -45,13 +43,50 @@ body {
   font-weight: 300;
 }
 
-// Hide the building div because it's for reference only and doesn't need to be rendered
+.unlit {
+  .bottom, .top, .left, .right, .front, .back {
+    background-color: white;
+  }
+
+  .sw, .ne, .full {
+    background: $background !important;
+  }
+}
+
+.untextured {
+  .bottom, .top, .left, .right, .front, .back {
+    background-image: none !important;
+    background-color: black;
+    border: 1px solid grey;
+  }
+
+  .sw, .ne, .full {
+    background: inherit !important;
+  }
+
+  car {
+    background: none !important;
+    border: 1px solid green;
+  }
+
+  wheel {
+    background: none !important;
+    border: 1px solid red;
+  }
+}
+
+
+
+// Hide the building div because it's for reference only and doesn't need to be rendered. Not even sure if this affects performance but makes sense!
 building {
   visibility: hidden;
 }
 
-.bottom {
+.bottom, .top, .back, .front, .left, .right {
   @extend %pseudo-block;
+}
+
+.bottom {
   background-color: white;
   background-position: -200px 0px;
   width: 100px;
@@ -88,7 +123,6 @@ building {
 }
 
 .top {
-  @extend %pseudo-block;
   background-color: white;
   background-position: 0px -200px;
   width: 100px;
@@ -96,22 +130,18 @@ building {
 }
 
 .back {
-  @extend %pseudo-block;
   background-color: white;
 }
 
 .front {
-  @extend %pseudo-block;
   background-color: darkgrey;
 }
 
 .left {
-  @extend %pseudo-block;
   background-color: lightgrey;
 }
 
 .right {
-  @extend %pseudo-block;
   background-color: grey;
 }
 
@@ -132,7 +162,7 @@ footer {
 
 pedestrian {
   @extend %pseudo-block;
-  background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0, rgba(0,0,0,0) 75%), 0px/32px url(/images/ped.gif);
+  background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0, rgba(0,0,0,0) 75%), 0px/32px url('../images/ped.gif');
   width: 32px;
   height: 32px;
   z-index: 10;
@@ -144,7 +174,7 @@ pedestrian {
 
 car {
   @extend %pseudo-block;
-  background: url(/images/car.png);
+  background: url('../images/car.png');
   background-size: 100%;
   width: 70px;
   height: 37px;
@@ -176,9 +206,11 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 
   & #mobileControls {
     visibility: hidden;
+    pointer-events: all;
 
     &.visible {
       visibility: visible;

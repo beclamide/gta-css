@@ -6,7 +6,7 @@ Play the demo here: [https://gta-css.herokuapp.com/](https://gta-css.herokuapp.c
 
 I made this demo just to see how powerful CSS 3D actually is, and I got a bit carried away...
 
-I was also curious to see how good CSS is for making computer games (spoiler alert: it's not).
+I was also curious to see how good CSS is for making computer games.
 
 I wanted to try to keep as much of the visual stuff within CSS as possible and use JS only for game logic.
 
@@ -30,4 +30,12 @@ Open a browser and go to `http://localhost:8080`
 | Accelerate       | Up Arrow          |
 | Brake            | Down Arrow        |
 | Steer Left/Right | Left/Right Arrows |
+
+There are now mobile controls too!
+
+## Slides
+
+I've added a slide deck that goes along with my talk (video link to be added later). They explain some of the process and development of the demo.
+
+Open a browser and go to `http://localhost:8080/slides.html`
 

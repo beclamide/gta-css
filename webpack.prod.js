@@ -10,22 +10,35 @@ module.exports = {
 		filename: 'src/bundle.js',
     },
     plugins: [
-        new CopyWebpackPlugin([
-            { from: 'app/images', to: 'images' },
-            { from: 'app/js/lib', to: 'src/lib' },
-            { from: 'app/index.html', to: 'index.html' },
-            { from: 'app/manifest.json', to: 'manifest.json' },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'app/images', to: 'images' },
+                { from: 'app/js/lib', to: 'src/lib' },
+                { from: 'app/index.html', to: 'index.html' },
+                { from: 'app/manifest.json', to: 'manifest.json' },
+            ]
+        }),
     ],
     module: {
         rules: [{
+            test    : /\.(png|jpg|svg|gif)$/,
+            use: [
+                {
+                    loader: 'url-loader',
+                    options: {
+                        limit: false // <-- Do not convert images to Base64 or they will need to be decypted on every frame!!
+                    }
+                }
+            ]
+        },
+        {
             test: /\.scss$/,
             use: [{
-                loader: "style-loader"
+                loader: 'style-loader'
             }, {
-                loader: "css-loader"
+                loader: 'css-loader'
             }, {
-                loader: "sass-loader"
+                loader: 'sass-loader'
             }]
         }]
     },
