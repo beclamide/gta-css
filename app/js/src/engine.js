@@ -14,6 +14,9 @@ class Engine {
     this.cameraCatchup = .1;
     this.isMobile = mobileAndTabletCheck();
 
+    this.times = [];
+    this.fps;
+
     this.map = [
       'wwwwwwwwwwwwwwwwwwwwww',
       'wwwwwwwwwwwwwwwwwwwwww',
@@ -312,6 +315,14 @@ class Engine {
   }
 
   render() {
+    const now = performance.now();
+    while (this.times.length > 0 && this.times[0] <= now - 1000) {
+      this.times.shift();
+    }
+    this.times.push(now);
+    this.fps = this.times.length;
+    if (document.getElementById('frameRate')) document.getElementById('frameRate').innerText = `${this.fps} FPS`;
+
     this.update();
     this.renderer.render(this.scene, this.camera);
     window.requestAnimationFrame(() => this.render());

@@ -24,19 +24,16 @@
 
           <!-- Intro -->
           <section>
-            <h1 class="r-fit-text">GTA CSS</h1>
-          </section>
-          <section>
             <h1>How to make</h1>
             <h1>Grand Theft Auto</h1>
             <h1>using CSS</h1>
             <h3 class="fragment">(as much as possible)</h3>
           </section>
+          <section>
+            <img src="/images/slides/gta.jpg" />
+          </section>
 
           <!-- How it started -->
-          <section>
-            <h1 class="r-fit-text">How it started</h1>
-          </section>
           <section>
             <h2 class="r-fit-text">What is CSS 3D?</h2>
             <ul>
@@ -45,6 +42,9 @@
               <li class="fragment">Animation can be achieved by using transitions, the same as normal 2D CSS</li>
               <li class="fragment">Everything remains part of the DOM and keep their HTMLElement properties and events</li>
             </ul>
+          </section>
+          <section>
+            <h1 class="r-fit-text">How it started</h1>
           </section>
           <section>
             <h2 class="r-fit-text">How to test what CSS 3D is capable of?</h2>
@@ -56,9 +56,6 @@
               <li class="fragment">... just make a cube</li>
               <li class="fragment">... maybe make it move round the screen</li>
             </ul>
-          </section>
-          <section>
-            <img src="/images/slides/gta.jpg" />
           </section>
           <section>
             <iframe height="600" style="width: 100%;" scrolling="no" title="Grand Theft CSS v1.0" src="https://codepen.io/Beclamide/embed/JoVNaP?height=265&theme-id=dark&default-tab=result" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
@@ -167,12 +164,10 @@ this.map = [
           <h2>SCSS</h2>
           <pre><code>
             %pseudo-block {
-              position: absolute;
               width: 100px;
               height: 200px;
               box-sizing: border-box;
               backface-visibility: hidden;
-              z-index: 10;
               content: '';
             }
 
@@ -183,7 +178,7 @@ this.map = [
         </section>
         <section>
           <h2>THREE JS Objects</h2>
-          <pre><code data-line-numbers>
+          <pre><code data-line-numbers="3-6|8-51|53-64|66-69">
 generateMap() {
   for (let i in this.map) {
     for (let v in this.map[i]) {
@@ -371,6 +366,29 @@ class Car {
             <img class="stretch" src="/images/slides/movement.png" />
           </section>
           <section>
+            <pre><code>
+tick() {
+  // steering
+  if (this.engine.keysdown.indexOf('ArrowRight') != -1) {
+    this.steering -= (this.steering > -this.maxsteering) ? this.steeringdelta : 0;
+  } else if (this.engine.keysdown.indexOf('ArrowLeft') != -1) {
+    this.steering += (this.steering < this.maxsteering) ? this.steeringdelta : 0;
+  } else {
+    this.steering *= this.straightendelta;
+  }
+  
+  // acceleration
+  if (this.engine.keysdown.indexOf('ArrowUp') != -1) {
+    this.speed += (this.speed < this.maxspeed) ? this.acceleration: 0;
+  } else if (this.engine.keysdown.indexOf('ArrowDown') != -1) { // reverse
+    this.speed -= (this.speed > -this.maxspeed / 2) ? this.acceleration : 0;
+  } else {
+    this.speed *= this.deceleration;
+  }
+}
+            </code></pre>
+          </section>
+          <section>
             <iframe width="100%" height="600" data-src="/ch6.html">
             </iframe>
           </section>
@@ -538,6 +556,7 @@ $tiles: '../images/tiles.jpg';
           <section>
             <pre><code>
 $shadow: rgba(0, 0, 0, 0.25);
+
 .bottom {
   ...
   &.shade {
@@ -553,6 +572,22 @@ $shadow: rgba(0, 0, 0, 0.25);
       background: linear-gradient(45deg, white 50%, $shadow 50%), $background;
     }
   }
+}
+
+.back {
+  background-color: white;
+}
+
+.front {
+  background-color: darkgrey;
+}
+
+.left {
+  background-color: lightgrey;
+}
+
+.right {
+  background-color: grey;
 }
             </code></pre>
           </section>
@@ -854,8 +889,27 @@ updateSkidmarks() {
             <h1>Performance</h1>
           </section>
           <section>
-            <h2>Rendering Performance on Desktop is *bad*</h2>
-            <h3>More time spent painting to the DOM than processing game logic</h3>
+            <h2>Frames Per Second</h2>
+            <table>
+              <tbody>
+                <tr>
+                  <td>Desktop (OSX chrome)</td>
+                  <td>~25fps moving / ~40fps static</td>
+                </tr>
+                <tr>
+                  <td>Desktop (OSX safari)</td>
+                  <td>~60fps (capped)</td>
+                </tr>
+                <tr>
+                  <td>Mobile (chrome)</td>
+                  <td>~60fps (capped)</td>
+                </tr>
+                <tr>
+                  <td>Mobile (safari)</td>
+                  <td>~60fps (capped)</td>
+                </tr>
+              </tbody>
+            </table>
           </section>
 
 
@@ -863,9 +917,9 @@ updateSkidmarks() {
           <section>
             <h1>Conclusion</h1>
             <ul>
-              <li class="fragment">CSS3D isn't great for making games. Rendering is too flakey.</li>
-              <li class="fragment">CSS3D is fantastic for rich multimedia experiences</li>
-              <li class="fragment">If your website doesn&apos;t allow you to run over zombies, how can you be taken seriously??</li>
+              <li class="fragment">CSS3D is fantastic for rich cross-platform 3D multimedia experiences</li>
+              <li class="fragment">Performance varies massively between browsers</li>
+              <li class="fragment">If your website doesn&apos;t allow you to run over zombies, how can you be taken seriously in 2021??</li>
             </ul>
           </section>
 

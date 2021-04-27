@@ -201,7 +201,7 @@ class Car {
         this.steering *= this.straightendelta;
       }
 
-      // gas
+      // acceleration
       if (this.engine.keysdown.indexOf('ArrowUp') != -1) {
         this.speed += (this.speed < this.maxspeed) ? this.acceleration: 0;
       } else if (this.engine.keysdown.indexOf('ArrowDown') != -1) { // reverse
