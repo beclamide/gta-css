@@ -5,23 +5,26 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = {
     mode: 'production',
     devtool: 'source-map',
-    entry: ['./app/js/src/index.js'],
+    entry: {
+        main: './app/js/src/index.js',
+        slides: './app/js/slides/index.js',
+    },
 	output: {
-		filename: 'src/bundle.js',
+		filename: 'src/[name].bundle.js',
     },
     plugins: [
         new CopyWebpackPlugin({
             patterns: [
                 { from: 'app/images', to: 'images' },
                 { from: 'app/js/lib', to: 'src/lib' },
-                { from: 'app/index.html', to: 'index.html' },
+                { from: 'app/*.html', to: '[name].html' },
                 { from: 'app/manifest.json', to: 'manifest.json' },
             ]
         }),
     ],
     module: {
         rules: [{
-            test    : /\.(png|jpg|svg|gif)$/,
+            test    : /\.(png|jpg|svg|gif|ttf|woff|eot)$/,
             use: [
                 {
                     loader: 'url-loader',
@@ -32,7 +35,7 @@ module.exports = {
             ]
         },
         {
-            test: /\.scss$/,
+            test: /\.(css|scss)$/,
             use: [{
                 loader: 'style-loader'
             }, {
